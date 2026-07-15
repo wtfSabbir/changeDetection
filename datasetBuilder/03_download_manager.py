@@ -5,20 +5,33 @@ import requests
 from multiprocessing import Pool
 
 def download_with_backoff(url, save_path, max_retries=5):
-    """Downloads an image using exponential backoff."""
+    """Downloads an image using exponential backoff, handling STAC JSON redirects."""
     if os.path.exists(save_path):
-        return # Idempotent: skip if already downloaded
+        return True # Idempotent: skip if already downloaded
         
     retries = 0
     while retries < max_retries:
         try:
             response = requests.get(url, timeout=10)
             if response.status_code == 200:
-                with open(save_path, 'wb') as f:
-                    f.write(response.content)
-                return True
+                content_type = response.headers.get('Content-Type', '')
+
+                # THE FIX: If the API hands us JSON metadata instead of an image...
+                if 'json' in content_type:
+                    stac_data = response.json()
+                    # ...dig inside the JSON to find the real image URL!
+                    real_image_url = stac_data['assets']['hd']['href']
+                    
+                    # Recursively call this function with the correct URL
+                    return download_with_backoff(real_image_url, save_path, max_retries)
+                else:
+                    # It's an actual image! Save the bytes to the hard drive.
+                    with open(save_path, 'wb') as f:
+                        f.write(response.content)
+                    return True
+                    
             elif response.status_code == 429: # Too Many Requests
-                time.sleep((2 ** retries)) # Exponential backoff: 1, 2, 4, 8, 16s
+                time.sleep((2 ** retries))
                 retries += 1
             else:
                 break
