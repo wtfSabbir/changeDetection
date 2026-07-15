@@ -61,12 +61,3 @@ To change the target cities, edit the `CITIES` list inside `main_runner.py`:
 ```python
 CITIES = ["Saint-Émilion, France", "Bordeaux, France", "Paris, France"]
 ```
-
-## 🗺️ Roadmap
-
-- [x] **Phase 1:** Topology Generation & Data Orchestration
-- [ ] **Phase 2:** Geometry & Pose Estimation (Cubemapping equirectangular images, extracting 3D camera translation via MapAnything, and calculating Disocclusion masks).
-- [ ] **Phase 3:** Synthetic Change Generation (Using Generative Diffusion models to inject structural changes).
-
-## 📄 License
-This project relies on open-source imagery provided by the **Panoramax** community and map data from **OpenStreetMap**.
