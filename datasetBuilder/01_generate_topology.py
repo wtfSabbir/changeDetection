@@ -22,7 +22,9 @@ except AttributeError:
 
 def generate_target_nodes(city_name, output_dir, max_points=1000):
     print(f"Generating topology for {city_name}...")
-    
+    import osmnx as ox
+    ox.settings.timeout = 2000
+    ox.settings.use_cache = True
     # 1. Download street network and building footprints
     graph = ox.graph_from_place(city_name, network_type='drive')
     buildings = ox.features_from_place(city_name, tags={'building': True})

@@ -13,7 +13,7 @@ download_manager = import_module("03_download_manager").run_download_pool
 
 print("!!!!! I AM RUNNING THE NEWEST VERSION OF THE SCRIPT !!!!!")
 
-CITIES = ["Bordeaux, France"] # Example
+CITIES = ["Saint-Émilion, France"] # Example
 
 #CITIES = [
 #    "Toulouse, France", "Paris, France", "Lyon, France", "Marseille, France",
